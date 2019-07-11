@@ -34,3 +34,7 @@ app.use(errHandler)
 app.listen(port, () => {
     console.log(`Connection on port :${port} Success !!!`)
 })
+const routeApiRecipe = require('./routes/recipe')
+
+app.use("/apiRecipe", routeApiRecipe)
+
