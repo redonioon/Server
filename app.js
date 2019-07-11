@@ -1,4 +1,4 @@
-if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'dev') {
     require('dotenv').config();
 }
 
@@ -32,5 +32,5 @@ app.use('/', router)
 app.use(errHandler)
 
 app.listen(port, () => {
-    console.log('Connection Success !!!')
+    console.log(`Connection on port :${port} Success !!!`)
 })
