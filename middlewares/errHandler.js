@@ -8,6 +8,10 @@ function errHandler(err, req, res, next) {
         status = 404
         message.err = 'Data Not Found'
     }
+    else {
+        status = 500
+        message.err = `Internal server error`
+    }
 
     res.status(status).json(message)
 }
