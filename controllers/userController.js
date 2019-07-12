@@ -99,7 +99,8 @@ class UserClass {
     }
 
     static showFavorite(req, res, next) {
-        userFavorite.find({userId : decodeId(req.header('token'))}) // ini juga sama kasusnya harusnya dapet dari req header
+        let decode = decodeId(req.header('token'))
+        userFavorite.find({userId : decode._id}) // ini juga sama kasusnya harusnya dapet dari req header
         .populate()
             .then(data => {
                 res.status(200).json(data)
