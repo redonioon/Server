@@ -57,26 +57,39 @@ class UserClass {
             .then( (ticket) => {
                 const { email } = ticket.getPayload()
                 let newUserInfo = { 
-                    username: 'redonion_' + email,
+                    username: email,
                     email: email,
                     password: 'redonion'
                 }
-                userModel
-                    .create(newUserInfo)
-                    .then((newUser)=>{
-                        let payload = {
-                            _id: newUser._id,
-                            username: newUser.username,
-                            email: newUser.email
-                        }
-                        let token = sign(payload)
-                        res.status(200).json({
-                            token: token
-                        })
+                return userModel.findOne({ username: email})
+            .then( (user) => {
+                if (user) {
+                    let payload = {
+                        _id: user._id,
+                        username: user.username,
+                        email: user.email
+                    }
+                    let token = sign(payload)
+                    res.status(200).json({
+                        token: token
                     })
-                    .catch(next)
+                } else {
+                    return userModel.create(newUserInfo)
+                }
+            })
+            .then( (newUser) => {
+                let payload = {
+                    _id: newUser._id,
+                    username: newUser.username,
+                    email: newUser.email
+                }
+                let token = sign(payload)
+                res.status(200).json({
+                    token: token
+                })
             })
             .catch(next)
+            })
                     
     }
 
