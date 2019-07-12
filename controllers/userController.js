@@ -1,9 +1,9 @@
 const userModel = require('../models/userModel')
 const userFavorite = require('../models/userFavorite')
 const { compare } = require('../helpers/bcrypt')
-const { sign } = require('../helpers/jwtoken')
 const { OAuth2Client } = require('google-auth-library')
 const client = new OAuth2Client(process.env.GOOGLE_API_KEY)
+const { sign , decodeId } = require('../helpers/jwtoken')
 
 class UserClass {
     static signup(req, res, next) {
@@ -82,8 +82,10 @@ class UserClass {
 
     static favorite(req, res, next) {
         const { label, urlImage, recipe } = req.body
+        let decode = decodeId(req.header('token'))
         let dataToCreate = {
-            // userId = ini harusnya dapet dari req headernya ga sih ? sesuai yang lagi login siapa 
+            // userId = ini harusnya dapet dari req headernya ga sih ? sesuai yang lagi login siapa
+            userId : decode._id,
             label,
             urlImage,
             recipe
@@ -97,7 +99,7 @@ class UserClass {
     }
 
     static showFavorite(req, res, next) {
-        userFavorite.find({userId : "5d27fdd80191d810d1cd1e18"}) // ini juga sama kasusnya harusnya dapet dari req header
+        userFavorite.find({userId : decodeId(req.header('token'))}) // ini juga sama kasusnya harusnya dapet dari req header
         .populate()
             .then(data => {
                 res.status(200).json(data)

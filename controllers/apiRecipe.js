@@ -7,7 +7,7 @@ const edamamApi = axios.create({
 class ApiRecipeController {
 
   static searchRecipe(req, res, next) {
-    edamamApi.get(`/search?q=${req.body.foodName}&app_id=a8270818&app_key=50c7564cfcc04e840e09d17fc7f90873`)
+    edamamApi.get(`/search?q=${req.body.foodName}&app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_APP_KEY}`)
       .then(({ data }) => {
         if (data) {
           res.status(200).json(data)
