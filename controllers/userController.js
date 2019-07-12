@@ -61,38 +61,39 @@ class UserClass {
                     email: email,
                     password: 'redonion'
                 }
-                return userModel.findOne({ username: email})
-            .then( (user) => {
-                if (user) {
-                    let payload = {
-                        _id: user._id,
-                        username: user.username,
-                        email: user.email
+                userModel.findOne({ username: email})
+                .then( (user) => {
+                    if (user) {
+                        let payload = {
+                            _id: user._id,
+                            username: user.username,
+                            email: user.email
+                        }
+                        let token = sign(payload)
+                        res.status(200).json({
+                            token: token
+                        })
+                    } else {
+                        userModel
+                            .create(newUserInfo)
+                            .then( (newUser) => {
+                                let payload = {
+                                    _id: newUser._id,
+                                    username: newUser.username,
+                                    email: newUser.email
+                                }
+                                let token = sign(payload)
+                                res.status(200).json({
+                                    token: token
+                                })
+                            })
+                            .catch(next)
                     }
-                    let token = sign(payload)
-                    res.status(200).json({
-                        token: token
-                    })
-                } else {
-                    return userModel.create(newUserInfo)
-                }
-            })
-            .then( (newUser) => {
-                let payload = {
-                    _id: newUser._id,
-                    username: newUser.username,
-                    email: newUser.email
-                }
-                let token = sign(payload)
-                res.status(200).json({
-                    token: token
                 })
             })
             .catch(next)
-            })
-                    
     }
-
+            
     static favorite(req, res, next) {
         const { label, urlImage, recipe } = req.body
         let decode = decodeId(req.header('token'))
