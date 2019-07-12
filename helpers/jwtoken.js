@@ -14,5 +14,16 @@ module.exports = {
                 message: `Unauthenticated`
             })
         }
+    },
+    decodeId : function (val) {
+        try {
+            let decoded = jwt.verify(val, process.env.JWT_SECRET)
+                return decoded
+          } catch(err) {
+            return ({
+                code : 401,
+                message : `Something Wrong`
+            })
+          }
     }
 }
